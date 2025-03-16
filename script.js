@@ -1,56 +1,62 @@
-// Import Firebase SDK
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+// Firebase SDK Import
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
 
-// Your Firebase configuration (use your own credentials here)
+// Firebase configuration (REPLACE WITH YOUR OWN CONFIG)
 const firebaseConfig = {
   apiKey: "YOUR_API_KEY",
   authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
   projectId: "YOUR_PROJECT_ID",
   storageBucket: "YOUR_PROJECT_ID.appspot.com",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  messagingSenderId: "YOUR_SENDER_ID",
+  appId: "YOUR_APP_ID",
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const auth = getAuth();
+const auth = getAuth(app);
 
-// Function to sign up users
-function signup() {
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
+// Handle Sign Up
+document.getElementById("signup-btn").addEventListener("click", function () {
+  let email = document.getElementById("email").value;
+  let password = document.getElementById("password").value;
 
   createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
-      document.getElementById("status").innerText = "Signup successful!";
+      alert("Signup successful!");
+      console.log("User Created:", userCredential.user);
     })
     .catch((error) => {
-      document.getElementById("status").innerText = "Error: " + error.message;
+      alert(error.message);
+      console.error(error);
     });
-}
+});
 
-// Function to log in users
-function login() {
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
+// Handle Login
+document.getElementById("login-btn").addEventListener("click", function () {
+  let email = document.getElementById("email").value;
+  let password = document.getElementById("password").value;
 
   signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
-      document.getElementById("status").innerText = "Login successful!";
+      alert("Login successful!");
+      console.log("User Logged In:", userCredential.user);
     })
     .catch((error) => {
-      document.getElementById("status").innerText = "Error: " + error.message;
+      alert(error.message);
+      console.error(error);
     });
-}
+});
 
-// Function to log out users
-function logout() {
+// Handle Logout
+document.getElementById("logout-btn").addEventListener("click", function () {
   signOut(auth)
     .then(() => {
-      document.getElementById("status").innerText = "Logged out successfully!";
+      alert("Logged out successfully!");
+      console.log("User Logged Out");
     })
     .catch((error) => {
-      document.getElementById("status").innerText = "Error: " + error.message;
+      alert(error.message);
+      console.error(error);
     });
-}
+});
