@@ -1,90 +1,106 @@
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Animated Login Page</title>
+    <title>Login Page</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
         body {
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-        }
-        .login-container {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 30px;
-            border-radius: 10px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            font-family: Arial, sans-serif;
             text-align: center;
-            animation: fadeIn 1.2s ease-in-out;
+            margin: 50px;
         }
-        .login-container h2 {
-            color: white;
-            margin-bottom: 20px;
-        }
-        .input-group {
-            margin-bottom: 15px;
-        }
-        .input-group input {
-            width: 100%;
+        input {
+            display: block;
+            margin: 10px auto;
             padding: 10px;
-            border: none;
-            border-radius: 5px;
-            outline: none;
-            transition: 0.3s;
+            width: 80%;
+            max-width: 300px;
         }
-        .input-group input:focus {
-            transform: scale(1.05);
-        }
-        .login-btn {
-            background: #ff7eb3;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 5px;
+        button {
+            padding: 10px;
+            margin: 5px;
+            width: 150px;
             cursor: pointer;
-            transition: 0.3s;
-        }
-        .login-btn:hover {
-            background: #ff4f89;
-            transform: scale(1.1);
-        }
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
         }
     </style>
 </head>
 <body>
-    <div class="login-container">
-        <h2>Login</h2>
-        <div class="input-group">
-            <input type="text" placeholder="Username" required>
-        </div>
-        <div class="input-group">
-            <input type="password" placeholder="Password" required>
-        </div>
-        <button class="login-btn">Login</button>
-    </div>
+
+    <h2>Login or Sign Up</h2>
+
+    <input type="email" id="email" placeholder="Enter your email">
+    <input type="password" id="password" placeholder="Enter your password">
+    
+    <button id="login-btn">Login</button>
+    <button id="signup-btn">Sign Up</button>
+    <button id="logout-btn" style="display:none;">Logout</button>
+
+    <p id="status"></p>
+
+    <!-- Firebase Scripts -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } 
+        from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
+
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDy03LkdCtVzsOjzkxs4qdLH6U2lXz7tmM",
+            authDomain: "loka-40528.firebaseapp.com",
+            projectId: "loka-40528",
+            storageBucket: "loka-40528.appspot.com",
+            messagingSenderId: "132042402011",
+            appId: "1:132042402011:web:9028f307aee83f722f84fe",
+            measurementId: "G-3QE3XB9DGM"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // Signup Function
+        document.getElementById("signup-btn").addEventListener("click", function() {
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+
+            createUserWithEmailAndPassword(auth, email, password)
+                .then(() => document.getElementById("status").innerText = "Signup Successful!")
+                .catch(error => document.getElementById("status").innerText = error.message);
+        });
+
+        // Login Function
+        document.getElementById("login-btn").addEventListener("click", function() {
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+
+            signInWithEmailAndPassword(auth, email, password)
+                .then(() => {
+                    document.getElementById("status").innerText = "Login Successful!";
+                    document.getElementById("logout-btn").style.display = "block";
+                })
+                .catch(error => document.getElementById("status").innerText = error.message);
+        });
+
+        // Logout Function
+        document.getElementById("logout-btn").addEventListener("click", function() {
+            signOut(auth).then(() => {
+                document.getElementById("status").innerText = "Logged out!";
+                document.getElementById("logout-btn").style.display = "none";
+            }).catch(error => document.getElementById("status").innerText = error.message);
+        });
+
+        // Track Authentication State
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                document.getElementById("status").innerText = `Logged in as ${user.email}`;
+                document.getElementById("logout-btn").style.display = "block";
+            } else {
+                document.getElementById("status").innerText = "";
+                document.getElementById("logout-btn").style.display = "none";
+            }
+        });
+
+    </script>
 </body>
 </html>
-
-
