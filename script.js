@@ -1,8 +1,4 @@
-// Firebase SDK Import
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
-
-// Firebase configuration (REPLACE WITH YOUR OWN CONFIG)
+// Initialize Firebase (Make sure firebaseConfig is correct)
 const firebaseConfig = {
   apiKey: "YOUR_API_KEY",
   authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
@@ -13,15 +9,15 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
 
 // Handle Sign Up
 document.getElementById("signup-btn").addEventListener("click", function () {
   let email = document.getElementById("email").value;
   let password = document.getElementById("password").value;
 
-  createUserWithEmailAndPassword(auth, email, password)
+  auth.createUserWithEmailAndPassword(email, password)
     .then((userCredential) => {
       alert("Signup successful!");
       console.log("User Created:", userCredential.user);
@@ -37,7 +33,7 @@ document.getElementById("login-btn").addEventListener("click", function () {
   let email = document.getElementById("email").value;
   let password = document.getElementById("password").value;
 
-  signInWithEmailAndPassword(auth, email, password)
+  auth.signInWithEmailAndPassword(email, password)
     .then((userCredential) => {
       alert("Login successful!");
       console.log("User Logged In:", userCredential.user);
@@ -50,7 +46,7 @@ document.getElementById("login-btn").addEventListener("click", function () {
 
 // Handle Logout
 document.getElementById("logout-btn").addEventListener("click", function () {
-  signOut(auth)
+  auth.signOut()
     .then(() => {
       alert("Logged out successfully!");
       console.log("User Logged Out");
